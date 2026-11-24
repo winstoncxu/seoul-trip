@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Seoul Glow-Up Crew</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Seoul Crew">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f5f6f2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap">
 <style>
@@ -150,6 +157,14 @@ textarea { min-height: 64px; resize: vertical }
   </div>
 </form></dialog>
 
+<dialog id="codeDlg"><form id="codeForm" method="dialog">
+  <h3>Trip passcode</h3>
+  <p class="meta" style="margin:0">Enter the passcode from the group chat. You only need to do this once on this device.</p>
+  <label>Passcode<input id="codeInput" type="password" required autocomplete="current-password"></label>
+  <p class="err" id="codeMsg"></p>
+  <div class="actions"><button class="btn primary" type="submit">Open the board</button></div>
+</form></dialog>
+
 <dialog id="nameDlg"><form id="nameForm" method="dialog">
   <h3>Who are you?</h3>
   <p class="meta" style="margin:0">Your first name shows next to what you add and the places you heart. It's saved on this device only.</p>
@@ -182,9 +197,9 @@ textarea { min-height: 64px; resize: vertical }
   const api = async (path, opts = {}) => {
     const r = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
       ...opts,
-      headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json", Prefer: "return=representation", ...(opts.headers || {}) },
+      headers: { apikey: SUPABASE_KEY, "x-trip-code": state.code || "", "Content-Type": "application/json", Prefer: "return=representation", ...(opts.headers || {}) },
     });
-    if (!r.ok) throw new Error((await r.text()) || r.status);
+    if (!r.ok) { const e = new Error((await r.text()) || r.status); e.status = r.status; throw e; }
     return r.status === 204 ? null : r.json();
   };
   const loadEntries = () => api("entries?select=id,data,created_at,updated_at&order=created_at.asc&limit=1000");
@@ -240,8 +255,8 @@ textarea { min-height: 64px; resize: vertical }
   const ORDER = ["who", "flight", "hotel", "procedure", "food", "activity", "plan"];
   const STATUS = { booked: ["Booked", "ok"], planning: ["Planning", "idea"], idea: ["Idea", "idea"], want: ["Wants", "want"], had: ["Had before", "had"] };
 
-  const state = { tab: "who", entries: [], plan: null, loaded: false, filter: "all", me: "" };
-  try { state.me = localStorage.getItem("crew.name") || ""; const t = localStorage.getItem("crew.tab"); if (t && SECTIONS[t]) state.tab = t; } catch {}
+  const state = { tab: "who", entries: [], plan: null, loaded: false, filter: "all", me: "", code: "" };
+  try { state.code = localStorage.getItem("crew.code") || ""; state.me = localStorage.getItem("crew.name") || ""; const t = localStorage.getItem("crew.tab"); if (t && SECTIONS[t]) state.tab = t; } catch {}
   if (location.hash && SECTIONS[location.hash.slice(1)]) state.tab = location.hash.slice(1);
 
   // ---------- helpers ----------
@@ -324,14 +339,17 @@ textarea { min-height: 64px; resize: vertical }
   }
   function renderWho() {
     const box = el("section");
-    box.append(el("div", { class: "bar" }, el("h2", { text: "Who's going, and when" }), el("button", { class: "btn primary", type: "button", onclick: () => openForm("flight"), text: "Add my flight" }), el("p", { text: "Built from everyone's flights. Add yours and you'll appear here." })));
+    box.append(el("div", { class: "bar" }, el("h2", { text: "Who's going, and when" }), el("button", { class: "btn primary", type: "button", onclick: () => openForm("flight"), text: "Add a flight" }), el("p", { text: "Built from everyone's flights. If your name is already here, tap Edit next to your flight to fix or complete it instead of adding a new one." })));
     if (!state.loaded) { box.append(el("div", { class: "empty" }, el("strong", { text: "Loading" }), "One moment.")); return box; }
     const rows = new Map();
     for (const f of of("flight")) for (const n of names(f.person)) { const k = n.toLowerCase(); const r = rows.get(k) || { name: n, out: [], back: [] }; (f.dir === "back" ? r.back : r.out).push(f); rows.set(k, r); }
     if (!rows.size) { box.append(el("div", { class: "empty" }, el("strong", { text: "No flights yet" }), "Add a flight and the group calendar fills in.")); return box; }
-    const fl = (f) => el("div", {}, el("div", { text: `${f.title}${f.status === "planning" ? " (planning)" : ""}` }), el("div", { class: "meta", text: [f.from && f.to ? `${f.from.toUpperCase()} → ${f.to.toUpperCase()}` : "", f.dir === "back" ? (f.start && "Leaves " + fmtDT(f.start)) : (f.end && "Lands " + fmtDT(f.end))].filter(Boolean).join(" · ") }));
+    const fl = (f) => el("div", { style: "margin-bottom:4px" }, el("div", {}, `${f.title}${f.status === "planning" ? " (planning)" : ""} `, el("button", { class: "btn ghost", type: "button", style: "padding:0 4px", onclick: () => openForm("flight", f), text: "Edit" })), el("div", { class: "meta", text: [f.from && f.to ? `${f.from.toUpperCase()} → ${f.to.toUpperCase()}` : "", f.dir === "back" ? (f.start && "Leaves " + fmtDT(f.start)) : (f.end && "Lands " + fmtDT(f.end))].filter(Boolean).join(" · ") }));
     box.append(el("div", { class: "who" }, el("table", {}, el("thead", {}, el("tr", {}, el("th", { text: "Traveler" }), el("th", { text: "Getting there" }), el("th", { text: "Heading home" }))),
-      el("tbody", {}, [...rows.values()].sort((a, b) => a.name.localeCompare(b.name)).map((r) => el("tr", {}, el("td", { text: r.name }), el("td", {}, r.out.length ? r.out.map(fl) : el("span", { class: "meta", text: "Not added" })), el("td", {}, r.back.length ? r.back.map(fl) : el("span", { class: "meta", text: "Not added" }))))))));
+      el("tbody", {}, [...rows.values()].sort((a, b) => a.name.localeCompare(b.name)).map((r) => {
+        const missing = (dir) => el("button", { class: "btn ghost", type: "button", style: "padding:0", onclick: () => openForm("flight", null, { person: r.name, dir }), text: "+ Add" });
+        return el("tr", {}, el("td", { text: r.name }), el("td", {}, r.out.length ? r.out.map(fl) : missing("out")), el("td", {}, r.back.length ? r.back.map(fl) : missing("back")));
+      })))));
     const cal = el("div", { class: "cal", "aria-label": "Who is in Seoul each day" });
     const start = parseDay(TRIP_START);
     for (let i = 0; i < 10; i++) {
@@ -369,7 +387,7 @@ textarea { min-height: 64px; resize: vertical }
 
   // ---------- form ----------
   let editing = null, editingType = null;
-  async function openForm(type, entry = null) {
+  async function openForm(type, entry = null, preset = {}) {
     await ensureName();
     editing = entry; editingType = type;
     const S = SECTIONS[type];
@@ -380,9 +398,9 @@ textarea { min-height: 64px; resize: vertical }
     for (const [key, label, kind, o = {}] of S.fields) {
       const id = "f_" + key;
       let input;
-      if (kind === "select") { input = el("select", { id }, o.opts.map(([v, l]) => el("option", { value: v, text: l }))); input.value = entry?.[key] || o.opts[0][0]; }
+      if (kind === "select") { input = el("select", { id }, o.opts.map(([v, l]) => el("option", { value: v, text: l }))); input.value = entry?.[key] || preset[key] || o.opts[0][0]; }
       else if (kind === "textarea") { input = el("textarea", { id, placeholder: o.ph || "" }); input.value = entry?.[key] || ""; }
-      else { input = el("input", { id, type: kind === "datetime" ? "datetime-local" : kind, placeholder: o.ph || "", required: o.req }); input.value = entry?.[key] || (key === "person" && !entry && ["procedure", "food", "activity"].includes(type) ? state.me : ""); }
+      else { input = el("input", { id, type: kind === "datetime" ? "datetime-local" : kind, placeholder: o.ph || "", required: o.req }); input.value = entry?.[key] || preset[key] || (key === "person" && !entry && ["procedure", "food", "activity"].includes(type) ? state.me : ""); }
       const lab = el("label", {}, label, input);
       if (kind === "textarea" || key === "title" || (key === "person" && type !== "food" && type !== "activity")) { flush(); f.append(lab); }
       else { grid.push(lab); if (grid.length === 2) flush(); }
@@ -429,8 +447,29 @@ textarea { min-height: 64px; resize: vertical }
       state.loaded = true; notice("Can't reach the trip data right now. Check your connection; the page retries automatically."); render();
     }
   }
-  refresh();
-  setInterval(() => { if (!document.hidden) refresh(); }, POLL_MS);
+  // ---------- passcode ----------
+  const checkCode = async () => { try { return (await api("rpc/check_trip_code", { method: "POST", body: "{}" })) === true; } catch { return null; } };
+  function askCode(msg) {
+    return new Promise((res) => {
+      $("codeMsg").textContent = msg || "";
+      $("codeInput").value = "";
+      $("codeDlg").showModal();
+      $("codeForm").onsubmit = async (ev) => {
+        ev.preventDefault();
+        state.code = $("codeInput").value.trim();
+        const ok = await checkCode();
+        if (ok === false) { $("codeMsg").textContent = "That passcode didn't work. Check the group chat and try again."; return; }
+        try { localStorage.setItem("crew.code", state.code); } catch {}
+        $("codeDlg").close(); res();
+      };
+    });
+  }
+  (async () => {
+    const ok = state.code ? await checkCode() : false;
+    if (ok === false) { try { localStorage.removeItem("crew.code"); } catch {} await askCode(); }
+    refresh();
+  })();
+  setInterval(() => { if (!document.hidden && state.code) refresh(); }, POLL_MS);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
 })();
 </script>

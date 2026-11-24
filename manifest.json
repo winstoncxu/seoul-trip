@@ -1,0 +1,13 @@
+{
+  "name": "Seoul Glow-Up Crew",
+  "short_name": "Seoul Crew",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6f2",
+  "theme_color": "#2f7f6f",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
