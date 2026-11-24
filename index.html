@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Seoul Glow-Up Crew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #f5f6f2; --surface: #ffffff; --sunk: #eceee8; --line: #d7dbd2;
+  --ink: #1c2421; --muted: #5d6862;
+  --celadon: #2f7f6f; --celadon-soft: #dcefe9; --celadon-ink: #ffffff;
+  --stamp: #c8413a; --stamp-soft: #f8e1df;
+  --gold: #8a6a12; --gold-soft: #f6ecd0;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r: 12px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #121715; --surface: #1a211e; --sunk: #151b19; --line: #2c3632;
+  --ink: #e6ece9; --muted: #9aa8a1;
+  --celadon: #6cc4b0; --celadon-soft: #1d3530; --celadon-ink: #0d1a17;
+  --stamp: #f08a82; --stamp-soft: #3a1f1d;
+  --gold: #e3c56d; --gold-soft: #33290f;
+  color-scheme: dark } }
+* { box-sizing: border-box }
+html, body { margin: 0 }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px) }
+.wrap { max-width: 1100px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+button, input, select, textarea { font: inherit; color: inherit }
+button { cursor: pointer }
+:focus-visible { outline: 2px solid var(--celadon); outline-offset: 2px }
+[hidden] { display: none !important }
+
+header.hero { padding-block: 28px 18px }
+.hero-top { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap }
+.hero h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(30px, 6vw, 48px); line-height: 1.02; letter-spacing: -.01em; margin-right: auto }
+.hero h1 .hangul { color: var(--celadon) }
+.stamp { display: inline-grid; place-items: center; border: 2px solid var(--stamp); color: var(--stamp); border-radius: 8px; padding: 6px 12px; font-family: var(--display); font-weight: 700; transform: rotate(-3deg); text-align: center; line-height: 1.1 }
+.stamp small { display: block; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase }
+.sub { color: var(--muted); margin: 8px 0 0 }
+.crew { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; align-items: center }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 3px 10px 3px 4px; font-size: 13px }
+.chip .dot { width: 20px; height: 20px; border-radius: 50%; background: var(--celadon-soft); color: var(--celadon); display: grid; place-items: center; font-size: 11px; font-weight: 600 }
+.chip.none { padding-left: 10px; color: var(--muted) }
+.me { margin-left: auto; font-size: 13px; color: var(--muted) }
+.me button { border: 0; background: none; color: var(--celadon); padding: 0; text-decoration: underline }
+
+.notice { margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; background: var(--gold-soft); color: var(--gold); font-size: 14px }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: none; position: sticky; top: 0; background: var(--bg); z-index: 5 }
+nav.tabs::-webkit-scrollbar { display: none }
+.tab { border: 0; background: transparent; padding: 10px 12px; border-bottom: 2px solid transparent; color: var(--muted); font-weight: 500; white-space: nowrap; display: flex; gap: 6px; align-items: center }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--celadon) }
+.tab .n { font-size: 12px; background: var(--sunk); border-radius: 999px; padding: 0 7px; color: var(--muted) }
+
+main { padding-block: 18px 60px }
+.bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px }
+.bar h2 { margin: 0 auto 0 0; font-family: var(--display); font-size: 24px; font-weight: 700 }
+.bar p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: 14px }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 14px; font-weight: 500 }
+.btn:hover { border-color: var(--muted) }
+.btn.primary { background: var(--celadon); color: var(--celadon-ink); border-color: transparent; font-weight: 600 }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--muted); padding: 4px 8px; font-size: 13px }
+.btn.ghost:hover { color: var(--ink) }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px }
+.fchip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 12px; font-size: 13px }
+.fchip[aria-pressed="true"] { background: var(--celadon-soft); border-color: var(--celadon); color: var(--celadon) }
+
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: grid; gap: 6px; align-content: start; min-width: 0 }
+.card .top { display: flex; gap: 8px; align-items: flex-start }
+.card h3 { margin: 0; font-size: 16px; font-weight: 600; margin-right: auto; overflow-wrap: anywhere }
+.meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 2px 12px }
+.card p.notes { margin: 0; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere }
+.card a { color: var(--celadon); font-size: 13px; overflow-wrap: anywhere }
+.pill { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 1px 9px; white-space: nowrap }
+.pill.ok { background: var(--celadon-soft); color: var(--celadon) }
+.pill.idea { background: var(--sunk); color: var(--muted) }
+.pill.want { background: var(--gold-soft); color: var(--gold) }
+.pill.had { background: var(--stamp-soft); color: var(--stamp) }
+.foot { display: flex; align-items: center; gap: 8px; margin-top: 4px; border-top: 1px dashed var(--line); padding-top: 8px }
+.foot .by { font-size: 12px; color: var(--muted); margin-right: auto }
+.heart { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 2px 10px; font-size: 13px }
+.heart[aria-pressed="true"] { background: var(--stamp-soft); border-color: var(--stamp); color: var(--stamp) }
+.empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r); padding: 22px; color: var(--muted) }
+.empty strong { color: var(--ink); display: block; font-family: var(--display); font-size: 18px; margin-bottom: 4px }
+
+.who { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface) }
+.who table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px }
+.who th, .who td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top }
+.who th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600 }
+.who tr:last-child td { border-bottom: 0 }
+.calwrap { overflow-x: auto; margin-top: 16px }
+.cal { display: grid; grid-template-columns: repeat(10, minmax(64px, 1fr)); gap: 4px; min-width: 660px }
+.cal .d { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px; font-size: 12px; min-height: 70px }
+.cal .d b { display: block; font-family: var(--display); font-size: 15px }
+.cal .d.hot { border-color: var(--celadon); background: var(--celadon-soft) }
+.cal .d span { display: block; color: var(--muted); font-size: 11px; line-height: 1.3 }
+
+.plan { display: grid; gap: 14px }
+.day { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px }
+.day h3 { margin: 0 0 8px; font-family: var(--display); font-size: 18px }
+.day ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px }
+.day li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; font-size: 14px }
+.day li .t { color: var(--muted); font-variant-numeric: tabular-nums }
+.day li .w { color: var(--muted); font-size: 12px }
+.gaps { background: var(--gold-soft); color: var(--gold); border-radius: var(--r); padding: 12px 16px; font-size: 14px }
+.gaps ul { margin: 6px 0 0; padding-left: 18px }
+.planmeta { font-size: 13px; color: var(--muted) }
+
+dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); padding: 0; width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px) }
+dialog::backdrop { background: rgb(8 14 12 / .5) }
+dialog form { display: grid; gap: 12px; padding: 20px }
+dialog h3 { margin: 0; font-family: var(--display); font-size: 24px }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+@media (max-width: 480px) { .grid2 { grid-template-columns: 1fr } }
+label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); font-weight: 500; min-width: 0 }
+input, select, textarea { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 8px 10px; color: var(--ink); min-width: 0 }
+textarea { min-height: 64px; resize: vertical }
+.actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap }
+.actions .left { margin-right: auto; color: var(--stamp) }
+.err { color: var(--stamp); font-size: 13px; margin: 0 }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 10px; font-size: 14px; z-index: 20 }
+</style>
+</head>
+<body>
+<header class="hero wrap">
+  <div class="hero-top">
+    <h1>Seoul Glow-Up Crew <span class="hangul">서울</span></h1>
+    <div class="stamp" aria-label="Trip dates"><small>Seoul</small>Jan 14–23</div>
+  </div>
+  <p class="sub" id="countdown">Flights, stays, treatments, food and plans for the whole group, in one place.</p>
+  <div class="crew"><span id="crew"></span><span class="me" id="me"></span></div>
+</header>
+<div class="wrap"><p class="notice" id="notice" hidden></p></div>
+<nav class="tabs wrap" id="tabs" role="tablist" aria-label="Sections"></nav>
+<main class="wrap" id="main" aria-live="polite"><div class="empty"><strong>Loading trip details</strong>One moment.</div></main>
+
+<dialog id="dlg"><form id="form" method="dialog">
+  <h3 id="dlgTitle">Add</h3>
+  <div id="fields"></div>
+  <p class="err" id="formErr" hidden></p>
+  <div class="actions">
+    <button class="btn ghost left" id="delBtn" type="button" hidden>Delete</button>
+    <button class="btn" type="button" id="cancelBtn">Cancel</button>
+    <button class="btn primary" type="submit">Save</button>
+  </div>
+</form></dialog>
+
+<dialog id="nameDlg"><form id="nameForm" method="dialog">
+  <h3>Who are you?</h3>
+  <p class="meta" style="margin:0">Your first name shows next to what you add and the places you heart. It's saved on this device only.</p>
+  <label>First name<input id="nameInput" required maxlength="30" autocomplete="given-name"></label>
+  <div class="actions"><button class="btn primary" type="submit">Continue</button></div>
+</form></dialog>
+
+<script>
+(() => {
+  const SUPABASE_URL = "https://phgtjyivqclhalsbzhbq.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_VCyqyPr1WXfmy_XlaYUE2A_KpVSX5SY";
+  const TRIP_START = "2027-01-14";
+  const POLL_MS = 20000;
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, attrs = {}, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? "" : v);
+    }
+    for (const c of kids.flat()) if (c != null && c !== false) n.append(c.nodeType ? c : document.createTextNode(String(c)));
+    return n;
+  };
+
+  // ---------- data access (Supabase REST) ----------
+  const api = async (path, opts = {}) => {
+    const r = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
+      ...opts,
+      headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json", Prefer: "return=representation", ...(opts.headers || {}) },
+    });
+    if (!r.ok) throw new Error((await r.text()) || r.status);
+    return r.status === 204 ? null : r.json();
+  };
+  const loadEntries = () => api("entries?select=id,data,created_at,updated_at&order=created_at.asc&limit=1000");
+  const loadPlan = () => api("plan?id=eq.latest&select=data,updated_at");
+  const addEntry = (data) => api("entries", { method: "POST", body: JSON.stringify({ data }) });
+  const saveEntry = (id, data) => api("entries?id=eq." + id, { method: "PATCH", body: JSON.stringify({ data, updated_at: new Date().toISOString() }) });
+  const delEntry = (id) => api("entries?id=eq." + id, { method: "DELETE" });
+
+  // ---------- sections ----------
+  const SECTIONS = {
+    who: { label: "Who's going" },
+    flight: { label: "Flights", noun: "flight", blurb: "Add your flight so everyone knows when you land and leave.",
+      fields: [
+        ["person", "Traveler(s)", "text", { req: true, ph: "Gary & Yohanes" }],
+        ["title", "Airline & flight", "text", { req: true, ph: "Alaska 119" }],
+        ["dir", "Direction", "select", { opts: [["out", "To Seoul"], ["back", "Back home"], ["other", "Other"]] }],
+        ["status", "Status", "select", { opts: [["booked", "Booked"], ["planning", "Still planning"]] }],
+        ["from", "From", "text", { ph: "SEA" }], ["to", "To", "text", { ph: "ICN" }],
+        ["start", "Departs (local)", "datetime"], ["end", "Arrives (local)", "datetime"],
+        ["notes", "Notes", "textarea", { ph: "Cabin, seat, anything others should know" }]] },
+    hotel: { label: "Stays", noun: "stay", blurb: "Hotels people booked or suggest. Tap the heart on the ones you like.",
+      fields: [
+        ["title", "Hotel or Airbnb", "text", { req: true, ph: "Josun Palace" }],
+        ["area", "Neighborhood", "text", { ph: "Gangnam, Myeongdong, Yeouido…" }],
+        ["status", "Status", "select", { opts: [["idea", "Suggestion"], ["booked", "Booked"]] }],
+        ["person", "Who's staying", "text", { ph: "Everyone, or names" }],
+        ["start", "Check-in", "date"], ["end", "Check-out", "date"],
+        ["price", "Price per night", "text", { ph: "$220 / ₩300,000" }],
+        ["link", "Link", "url"], ["notes", "Notes", "textarea"]] },
+    procedure: { label: "Treatments", noun: "treatment", blurb: "What you've had, what you want, and where. Anyone with the link can see these, so only add what you're happy to share.",
+      fields: [
+        ["person", "Name", "text", { req: true, ph: "Your name" }],
+        ["title", "Treatment", "text", { req: true, ph: "Rejuran, Ulthera, laser toning…" }],
+        ["status", "Status", "select", { opts: [["want", "Want to get"], ["booked", "Booked"], ["had", "Had before"]] }],
+        ["clinic", "Clinic", "text", { ph: "Clinic name or area" }],
+        ["start", "Date", "date"], ["price", "Price / quote", "text"],
+        ["link", "Link (clinic, UNNI, review)", "url"], ["notes", "Notes & experience", "textarea", { ph: "Downtime, results, would you do it again?" }]] },
+    food: { label: "Eat & drink", noun: "place", blurb: "Restaurants, bars and cafés. Heart the ones you're in for.",
+      fields: [
+        ["title", "Place", "text", { req: true, ph: "That whisky bar" }],
+        ["area", "Neighborhood", "text"], ["kind", "Type", "text", { ph: "Korean BBQ, cocktails, café…" }],
+        ["start", "Planned date (optional)", "date"], ["person", "Suggested by", "text"],
+        ["link", "Link (Naver/Google Maps, IG)", "url"], ["notes", "Notes", "textarea", { ph: "Reservations? Must-order?" }]] },
+    activity: { label: "Things to do", noun: "activity", blurb: "Sights, tours, shopping, Hanbok, spas. Heart what you'd join.",
+      fields: [
+        ["title", "Activity", "text", { req: true, ph: "Gyeongbokgung in Hanbok" }],
+        ["area", "Where", "text"], ["start", "Date (optional)", "date"],
+        ["status", "Status", "select", { opts: [["idea", "Idea"], ["booked", "Booked"]] }],
+        ["person", "Suggested by", "text"], ["price", "Cost", "text"],
+        ["link", "Link", "url"], ["notes", "Notes", "textarea", { ph: "Closed days, booking needed, how long" }]] },
+    plan: { label: "Trip plan" },
+  };
+  const ORDER = ["who", "flight", "hotel", "procedure", "food", "activity", "plan"];
+  const STATUS = { booked: ["Booked", "ok"], planning: ["Planning", "idea"], idea: ["Idea", "idea"], want: ["Wants", "want"], had: ["Had before", "had"] };
+
+  const state = { tab: "who", entries: [], plan: null, loaded: false, filter: "all", me: "" };
+  try { state.me = localStorage.getItem("crew.name") || ""; const t = localStorage.getItem("crew.tab"); if (t && SECTIONS[t]) state.tab = t; } catch {}
+  if (location.hash && SECTIONS[location.hash.slice(1)]) state.tab = location.hash.slice(1);
+
+  // ---------- helpers ----------
+  const parseDay = (s) => { if (!s) return null; const [y, m, d] = s.slice(0, 10).split("-").map(Number); return y ? new Date(y, m - 1, d) : null; };
+  const fmtDay = (s) => { const d = parseDay(s); return d ? d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }) : ""; };
+  const fmtTime = (s) => { if (!s || s.length < 16 || s.slice(11, 16) === "00:00") return ""; const d = new Date(s); return isNaN(d) ? "" : d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }); };
+  const fmtDT = (s) => [fmtDay(s), fmtTime(s)].filter(Boolean).join(" ");
+  const notice = (m) => { $("notice").textContent = m || ""; $("notice").hidden = !m; };
+  let tt; const toast = (m) => { document.querySelector(".toast")?.remove(); const t = el("div", { class: "toast", role: "status", text: m }); document.body.append(t); clearTimeout(tt); tt = setTimeout(() => t.remove(), 2200); };
+  const of = (type) => state.entries.filter((e) => e.type === type);
+  const names = (s) => String(s || "").split(/,|&|\band\b|\//i).map((x) => x.trim()).filter(Boolean);
+  const safeUrl = (u) => /^https?:\/\//i.test(u || "") ? u : null;
+  const meKey = () => state.me.trim().toLowerCase();
+
+  function askName() { return new Promise((res) => { $("nameInput").value = state.me; $("nameDlg").showModal(); $("nameForm").onsubmit = (ev) => { ev.preventDefault(); const v = $("nameInput").value.trim(); if (!v) return; state.me = v; try { localStorage.setItem("crew.name", v); } catch {} $("nameDlg").close(); render(); res(v); }; }); }
+  async function ensureName() { return state.me || await askName(); }
+
+  // ---------- render ----------
+  function crew() {
+    const set = new Map();
+    for (const e of state.entries) if (["flight", "procedure"].includes(e.type)) for (const n of names(e.person)) if (!/everyone|group|all/i.test(n)) set.set(n.toLowerCase(), n);
+    return [...set.values()].sort((a, b) => a.localeCompare(b));
+  }
+  function renderHero() {
+    const days = Math.round((parseDay(TRIP_START) - new Date(new Date().toDateString())) / 864e5);
+    $("countdown").textContent = days > 0 ? `${days} days until the first wheels touch down at Incheon. Add your flights, stays, treatments and ideas — no account needed.` : "Trip time. Keep adding as plans change.";
+    const c = $("crew"); c.replaceChildren();
+    const people = crew();
+    if (!state.loaded) c.append(el("span", { class: "chip none", text: "Loading the crew…" }));
+    else if (!people.length) c.append(el("span", { class: "chip none", text: "Add a flight to show up here" }));
+    for (const p of people) c.append(el("span", { class: "chip", style: "margin:0 6px 6px 0" }, el("span", { class: "dot", "aria-hidden": "true", text: p[0].toUpperCase() }), p));
+    const me = $("me"); me.replaceChildren();
+    if (state.me) me.append("You're ", el("strong", { text: state.me }), " · ", el("button", { type: "button", onclick: askName, text: "change" }));
+  }
+  function renderTabs() {
+    const nav = $("tabs"); nav.replaceChildren();
+    for (const k of ORDER) {
+      const n = SECTIONS[k].fields ? of(k).length : null;
+      nav.append(el("button", { class: "tab", role: "tab", type: "button", "aria-selected": String(state.tab === k), onclick: () => go(k) }, SECTIONS[k].label, n != null && el("span", { class: "n", text: n })));
+    }
+  }
+  function go(k) { state.tab = k; state.filter = "all"; try { localStorage.setItem("crew.tab", k); } catch {} history.replaceState(null, "", "#" + k); render(); }
+
+  function card(e) {
+    const S = STATUS[e.status];
+    const hearts = Object.entries(e.interested || {}).filter(([, v]) => v).map(([k]) => k);
+    const mine = state.me && e.interested?.[meKey()];
+    const meta = [];
+    if (e.type === "flight") { if (e.from || e.to) meta.push(`${(e.from || "?").toUpperCase()} → ${(e.to || "?").toUpperCase()}`); if (e.start) meta.push("Departs " + fmtDT(e.start)); if (e.end) meta.push("Arrives " + fmtDT(e.end)); }
+    else { if (e.area) meta.push(e.area); if (e.kind) meta.push(e.kind); if (e.clinic) meta.push(e.clinic); if (e.start) meta.push(e.end ? `${fmtDay(e.start)} – ${fmtDay(e.end)}` : fmtDay(e.start)); if (e.price) meta.push(e.price); }
+    const showHeart = ["hotel", "food", "activity"].includes(e.type);
+    return el("article", { class: "card" },
+      el("div", { class: "top" }, el("h3", { text: e.title || "Untitled" }), S && el("span", { class: "pill " + S[1], text: S[0] })),
+      e.person && el("div", { class: "meta", text: (e.type === "food" || e.type === "activity" ? "Suggested by " : "") + e.person }),
+      meta.length && el("div", { class: "meta" }, meta.map((m) => el("span", { text: m }))),
+      e.notes && el("p", { class: "notes", text: e.notes }),
+      safeUrl(e.link) && el("a", { href: e.link, target: "_blank", rel: "noopener", text: "Open link" }),
+      el("div", { class: "foot" },
+        el("span", { class: "by", text: e.addedBy ? "Added by " + e.addedBy : "", title: hearts.length ? "♥ " + hearts.join(", ") : "" }),
+        showHeart && el("button", { class: "heart", type: "button", "aria-pressed": String(!!mine), title: hearts.length ? "Interested: " + hearts.join(", ") : "I'm interested", onclick: () => toggleHeart(e) }, `♥ ${hearts.length || ""}`.trim()),
+        el("button", { class: "btn ghost", type: "button", onclick: () => openForm(e.type, e), text: "Edit" })));
+  }
+  function renderList(type) {
+    const S = SECTIONS[type];
+    let items = of(type);
+    const box = el("section");
+    box.append(el("div", { class: "bar" }, el("h2", { text: S.label }), el("button", { class: "btn primary", type: "button", onclick: () => openForm(type), text: "Add " + S.noun }), el("p", { text: S.blurb })));
+    if (type === "procedure") {
+      const f = el("div", { class: "filters" });
+      for (const [k, l] of [["all", "All"], ["want", "Want"], ["booked", "Booked"], ["had", "Had before"]]) f.append(el("button", { class: "fchip", type: "button", "aria-pressed": String(state.filter === k), onclick: () => { state.filter = k; render(); }, text: l }));
+      box.append(f);
+      if (state.filter !== "all") items = items.filter((e) => e.status === state.filter);
+    }
+    const hearts = (e) => Object.values(e.interested || {}).filter(Boolean).length;
+    items.sort((a, b) => type === "flight" ? (a.start || "9").localeCompare(b.start || "9") : ["hotel", "food", "activity"].includes(type) ? hearts(b) - hearts(a) : ((a.person || "") + a.title).localeCompare((b.person || "") + b.title));
+    if (!state.loaded) box.append(el("div", { class: "empty" }, el("strong", { text: "Loading" }), "One moment."));
+    else if (!items.length) box.append(el("div", { class: "empty" }, el("strong", { text: "Nothing here yet" }), `Be the first to add a ${S.noun}.`));
+    else box.append(el("div", { class: "list" }, items.map(card)));
+    return box;
+  }
+  function renderWho() {
+    const box = el("section");
+    box.append(el("div", { class: "bar" }, el("h2", { text: "Who's going, and when" }), el("button", { class: "btn primary", type: "button", onclick: () => openForm("flight"), text: "Add my flight" }), el("p", { text: "Built from everyone's flights. Add yours and you'll appear here." })));
+    if (!state.loaded) { box.append(el("div", { class: "empty" }, el("strong", { text: "Loading" }), "One moment.")); return box; }
+    const rows = new Map();
+    for (const f of of("flight")) for (const n of names(f.person)) { const k = n.toLowerCase(); const r = rows.get(k) || { name: n, out: [], back: [] }; (f.dir === "back" ? r.back : r.out).push(f); rows.set(k, r); }
+    if (!rows.size) { box.append(el("div", { class: "empty" }, el("strong", { text: "No flights yet" }), "Add a flight and the group calendar fills in.")); return box; }
+    const fl = (f) => el("div", {}, el("div", { text: `${f.title}${f.status === "planning" ? " (planning)" : ""}` }), el("div", { class: "meta", text: [f.from && f.to ? `${f.from.toUpperCase()} → ${f.to.toUpperCase()}` : "", f.dir === "back" ? (f.start && "Leaves " + fmtDT(f.start)) : (f.end && "Lands " + fmtDT(f.end))].filter(Boolean).join(" · ") }));
+    box.append(el("div", { class: "who" }, el("table", {}, el("thead", {}, el("tr", {}, el("th", { text: "Traveler" }), el("th", { text: "Getting there" }), el("th", { text: "Heading home" }))),
+      el("tbody", {}, [...rows.values()].sort((a, b) => a.name.localeCompare(b.name)).map((r) => el("tr", {}, el("td", { text: r.name }), el("td", {}, r.out.length ? r.out.map(fl) : el("span", { class: "meta", text: "Not added" })), el("td", {}, r.back.length ? r.back.map(fl) : el("span", { class: "meta", text: "Not added" }))))))));
+    const cal = el("div", { class: "cal", "aria-label": "Who is in Seoul each day" });
+    const start = parseDay(TRIP_START);
+    for (let i = 0; i < 10; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const here = [...rows.values()].filter((r) => {
+        const arr = r.out.map((f) => (f.end || f.start || "").slice(0, 10)).filter(Boolean).sort()[0];
+        const dep = r.back.map((f) => (f.start || "").slice(0, 10)).filter(Boolean).sort().slice(-1)[0];
+        return arr && iso >= arr && (!dep || iso <= dep);
+      });
+      const events = state.entries.filter((e) => ["procedure", "activity", "food"].includes(e.type) && (e.start || "").slice(0, 10) === iso);
+      cal.append(el("div", { class: "d" + (here.length >= 4 ? " hot" : "") }, el("b", { text: d.toLocaleDateString(undefined, { month: "numeric", day: "numeric" }) }), el("span", { text: d.toLocaleDateString(undefined, { weekday: "short" }) }), el("span", { text: here.length ? `${here.length} in Seoul` : "" }), events.slice(0, 2).map((e) => el("span", { text: "• " + e.title }))));
+    }
+    box.append(el("div", { class: "calwrap" }, cal));
+    return box;
+  }
+  function renderPlan() {
+    const box = el("section");
+    box.append(el("div", { class: "bar" }, el("h2", { text: "Trip plan" }), el("p", { text: "A day-by-day draft built from everything the group adds. It's refreshed automatically about once an hour, so new entries show up here soon after you add them." })));
+    const p = state.plan;
+    if (!p) { box.append(el("div", { class: "empty" }, el("strong", { text: "No plan yet" }), "The first draft appears here after the next hourly update.")); return box; }
+    box.append(el("p", { class: "planmeta", text: "Last updated " + new Date(p.generatedAt || p.updated_at).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) }));
+    if (p.summary) box.append(el("p", { text: p.summary }));
+    box.append(el("div", { class: "plan" }, (p.days || []).map((d) => el("div", { class: "day" }, el("h3", { text: [fmtDay(d.date), d.title].filter(Boolean).join(" · ") }),
+      el("ul", {}, (d.items || []).map((it) => el("li", {}, el("span", { class: "t", text: it.time || "" }), el("span", {}, String(it.title || ""), it.who && el("div", { class: "w", text: it.who })))))))));
+    if (p.gaps?.length) box.append(el("div", { class: "gaps" }, el("strong", { text: "Still to sort out" }), el("ul", {}, p.gaps.map((g) => el("li", { text: g })))));
+    return box;
+  }
+  function render() {
+    renderHero(); renderTabs();
+    if ($("dlg").open) return;
+    const m = $("main"); m.replaceChildren();
+    m.append(state.tab === "who" ? renderWho() : state.tab === "plan" ? renderPlan() : renderList(state.tab));
+  }
+
+  // ---------- form ----------
+  let editing = null, editingType = null;
+  async function openForm(type, entry = null) {
+    await ensureName();
+    editing = entry; editingType = type;
+    const S = SECTIONS[type];
+    $("dlgTitle").textContent = (entry ? "Edit " : "Add ") + S.noun;
+    const f = $("fields"); f.replaceChildren();
+    const grid = [];
+    const flush = () => { if (grid.length) f.append(el("div", { class: "grid2" }, grid.splice(0))); };
+    for (const [key, label, kind, o = {}] of S.fields) {
+      const id = "f_" + key;
+      let input;
+      if (kind === "select") { input = el("select", { id }, o.opts.map(([v, l]) => el("option", { value: v, text: l }))); input.value = entry?.[key] || o.opts[0][0]; }
+      else if (kind === "textarea") { input = el("textarea", { id, placeholder: o.ph || "" }); input.value = entry?.[key] || ""; }
+      else { input = el("input", { id, type: kind === "datetime" ? "datetime-local" : kind, placeholder: o.ph || "", required: o.req }); input.value = entry?.[key] || (key === "person" && !entry && ["procedure", "food", "activity"].includes(type) ? state.me : ""); }
+      const lab = el("label", {}, label, input);
+      if (kind === "textarea" || key === "title" || (key === "person" && type !== "food" && type !== "activity")) { flush(); f.append(lab); }
+      else { grid.push(lab); if (grid.length === 2) flush(); }
+    }
+    flush();
+    $("delBtn").hidden = !entry; $("delBtn").textContent = "Delete"; delete $("delBtn").dataset.armed;
+    $("formErr").hidden = true;
+    $("dlg").showModal();
+  }
+  $("cancelBtn").addEventListener("click", () => { $("dlg").close(); render(); });
+  const formErr = (m) => { $("formErr").hidden = false; $("formErr").textContent = m; };
+  $("form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const body = editing ? { ...editing.raw } : { type: editingType, interested: {}, addedBy: state.me, createdAt: new Date().toISOString() };
+    for (const [key] of SECTIONS[editingType].fields) body[key] = ($("f_" + key).value || "").trim();
+    body.updatedAt = new Date().toISOString();
+    if (body.start && body.end && body.end < body.start && editingType !== "flight") return formErr("The end date is before the start date.");
+    try {
+      if (editing) await saveEntry(editing.id, body); else await addEntry(body);
+      $("dlg").close(); toast(editing ? "Saved" : "Added"); await refresh();
+    } catch { formErr("Couldn't save. Check your connection and try again."); }
+  });
+  $("delBtn").addEventListener("click", async (ev) => {
+    const b = ev.currentTarget;
+    if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Click again to delete"; return; }
+    try { await delEntry(editing.id); $("dlg").close(); toast("Deleted"); await refresh(); } catch { formErr("Couldn't delete. Try again."); }
+  });
+  async function toggleHeart(e) {
+    await ensureName();
+    const k = meKey();
+    const fresh = state.entries.find((x) => x.id === e.id) || e;
+    const body = { ...fresh.raw, interested: { ...(fresh.raw.interested || {}), [k]: !fresh.raw.interested?.[k] } };
+    try { await saveEntry(e.id, body); await refresh(); } catch { toast("Couldn't save. Try again."); }
+  }
+
+  // ---------- load ----------
+  async function refresh() {
+    try {
+      const [rows, plan] = await Promise.all([loadEntries(), loadPlan()]);
+      state.entries = rows.map((r) => ({ id: r.id, ...r.data, raw: r.data }));
+      state.plan = plan[0] ? { ...plan[0].data, updated_at: plan[0].updated_at } : null;
+      state.loaded = true; notice(""); render();
+    } catch {
+      state.loaded = true; notice("Can't reach the trip data right now. Check your connection; the page retries automatically."); render();
+    }
+  }
+  refresh();
+  setInterval(() => { if (!document.hidden) refresh(); }, POLL_MS);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+})();
+</script>
+</body>
+</html>
